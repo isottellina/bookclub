@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:14
+    env_file:
+      - .env
+    ports:
+      - 5432:5432
+
+  frontend:
+    image: book_front:latest
+    build:
+      context: frontend
+    volumes:
+      - ./frontend:/app
+    labels:
+      - "traefik.http.routers.frontend.rule=!PathPrefix(`/api`)"
+
+  backend:
+    image: book_back:latest
+    build:
+      context: backend
+    volumes:
+      - ./backend:/app
+    labels:
+      - "traefik.http.routers.backend.rule=PathPrefix(`/api`)"
+    depends_on:
+      - postgres
+
+  proxy:
+    image: traefik:latest
+    ports:
+      - 8000:80
+      - 8080:8080
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+    depends_on:
+      - frontend
+      - backend

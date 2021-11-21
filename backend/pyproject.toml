@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "bookclub"
+version = "0.1.0"
+description = ""
+authors = ["Louise <louise@zanier.org>"]
+license = "MPL"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+starlette = "^0.17.1"
+SQLAlchemy = {extras = ["postgresql", "asyncpg"], version = "^1.4.27"}
+PyJWT = "^2.3.0"
+uvicorn = "^0.15.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
